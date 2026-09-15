@@ -1,0 +1,76 @@
+# Sekrety i konfiguracja lokalna
+.env
+.env.*
+.envrc
+*.local
+
+# Pliki niosące sekrety — wzorce zawężone do rozszerzeń konfiguracyjnych,
+# żeby NIE blokować dokumentacji o sekretach (np. secret-manager.md) ani kodu
+# pomocniczego (np. credentials_helper.go) w tym repozytorium dokumentacji.
+*secret*.json
+*secret*.yml
+*secret*.yaml
+*secret*.env
+*credentials*.json
+*credentials*.yml
+*credentials*.yaml
+
+# Certyfikaty i klucze prywatne
+*.pem
+*.key
+*.p12
+*.pfx
+*.jks
+*.cer
+*.crt
+id_rsa
+id_rsa.*
+id_dsa
+id_dsa.*
+id_ecdsa
+id_ecdsa.*
+id_ed25519
+id_ed25519.*
+*_rsa
+*_dsa
+*_ecdsa
+*_ed25519
+
+# Konfiguracja IDE (może zawierać tokeny, ścieżki lokalne, credentiale)
+.idea/
+.vscode/
+.run/
+
+# Konfiguracja SSH, GPG, GitHub CLI, AWS
+.ssh/
+.gnupg/
+.config/gh/
+.aws/
+
+# Pliki konfiguracji z poufnymi danymi
+# config/secrets.* pokrywa config/secrets.yml/.yaml/.json — nie powielamy ich osobno
+config/secrets.*
+config/local.yml
+config/credentials.yml.enc
+config/master.key
+secrets.yml
+secrets.yaml
+secrets.json
+
+# Klucze aplikacji mobilnych
+google-services.json
+GoogleService-Info.plist
+
+# Creds narzędzi CLI i konfiguracja deweloperska
+.npmrc
+.python_history
+.ipynb_checkpoints/
+appsettings.Development.json
+local.settings.json
+
+# Dumpy / backupy danych (mogą zawierać PII lub kopię sekretów)
+*.sqlite
+*.db
+*.bak
+*backup*.sql
+*dump*.sql

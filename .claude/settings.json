@@ -1,0 +1,80 @@
+{
+  "permissions": {
+    "deny": [
+      "Read(**/.env)",
+      "Read(**/.env.*)",
+      "Read(**/.envrc)",
+      "Read(**/*.pem)",
+      "Read(**/*.key)",
+      "Read(**/*.p12)",
+      "Read(**/*.pfx)",
+      "Read(**/id_rsa)",
+      "Read(**/id_rsa.*)",
+      "Read(**/id_dsa)",
+      "Read(**/id_ecdsa)",
+      "Read(**/id_ed25519)",
+      "Read(**/*_rsa)",
+      "Read(**/config/secrets.*)",
+      "Read(**/config/master.key)",
+      "Read(**/config/credentials.yml.enc)",
+      "Read(**/secrets.yml)",
+      "Read(**/secrets.yaml)",
+      "Read(**/secrets.json)",
+      "Read(**/*secret*.json)",
+      "Read(**/*secret*.yml)",
+      "Read(**/*secret*.yaml)",
+      "Read(**/*credentials*.json)",
+      "Read(**/*credentials*.yml)",
+      "Read(**/*credentials*.yaml)",
+      "Read(**/.idea/**)",
+      "Read(**/.vscode/**)",
+      "Read(**/.run/**)",
+      "Read(~/.ssh/**)",
+      "Read(~/.aws/**)",
+      "Read(~/.gnupg/**)",
+      "Read(~/.config/gh/**)",
+      "Read(**/.kube/**)",
+      "Read(~/.kube/**)",
+      "Read(~/.azure/**)",
+      "Read(~/.config/gcloud/**)",
+      "Read(~/.gcloud/**)",
+      "Read(~/.docker/config.json)",
+      "Read(**/.npmrc)",
+      "Read(~/.npmrc)",
+      "Read(~/.bash_history)",
+      "Read(~/.zsh_history)",
+      "Read(~/*_history)",
+      "Read(**/.python_history)",
+      "Read(**/.ipynb_checkpoints/**)",
+      "Read(**/*.sqlite)",
+      "Read(**/*.db)",
+      "Read(**/*.bak)",
+      "Read(**/*backup*.sql)",
+      "Read(**/*dump*.sql)",
+      "Read(**/appsettings.Development.json)",
+      "Read(**/local.settings.json)",
+      "Bash(git commit)",
+      "Bash(git push)"
+    ],
+    "ask": [
+      "Bash(curl *)",
+      "Bash(wget *)",
+      "Bash(rm -rf *)",
+      "Bash(sudo *)"
+    ]
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "${CLAUDE_PROJECT_DIR}/.claude/hooks/pre-bash-audit.sh",
+            "args": []
+          }
+        ]
+      }
+    ]
+  }
+}
