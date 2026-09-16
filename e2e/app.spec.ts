@@ -4,9 +4,7 @@ test('renders the app shell', async ({ page }) => {
   await page.goto('/')
 
   await expect(page).toHaveTitle('Flight Tracker')
-  await expect(
-    page.getByRole('heading', { name: 'Flight Tracker' }),
-  ).toBeVisible()
+  await expect(page.getByTestId('app-title')).toHaveText('Flight Tracker')
 })
 
 test('renders the map without console errors', async ({ page }) => {

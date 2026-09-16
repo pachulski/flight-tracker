@@ -18,7 +18,7 @@ describe('BurritoListItem', () => {
       </ul>,
     )
 
-    expect(screen.getByText('Carnitas')).toBeInTheDocument()
-    expect(screen.getByText('24.90 PLN')).toBeInTheDocument()
+    expect(screen.getByTestId('burrito-name')).toHaveTextContent('Carnitas')
+    expect(screen.getByTestId('burrito-price')).toHaveTextContent('24.90 PLN')
   })
 })

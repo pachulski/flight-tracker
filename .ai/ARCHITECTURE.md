@@ -1,5 +1,8 @@
 # Frontend Architecture Rules
 
+Canonical source for structure, naming and conventions. Where any other document
+disagrees with this one, this one wins.
+
 ## Directory structure
 
 ```
@@ -31,6 +34,9 @@ Decision table:
 | Calls external API? | ✓ | ✗ |
 | Used repeatedly at runtime? | ✗ | ✓ |
 
+Startup modules use the `.init` postfix (see postfix table). It is valid only
+inside `application/` — an `.init` file anywhere else is in the wrong layer.
+
 #### application/api/
 
 Only place for backend API calls. Folder structure mirrors backend URL paths (Backend Reflection).
@@ -47,6 +53,10 @@ src/application/api/
 └─ open/
    └─ search.api.ts           # GET /api/open/search
 ```
+
+The frontend only ever calls our own backend. Third-party providers are reached
+through our own endpoints, so their paths never appear here — the provider call
+is an implementation detail of `application/server/`.
 
 #### application/server/
 
@@ -123,7 +133,29 @@ Imports flow down only — never up to a layer that knows the caller's context.
 - `shared/` must not import from `features/`
 - `features/A` must not import from `features/B`
 
-Enforce with `eslint-plugin-import` `no-cycle` rule.
+Enforce with `eslint-plugin-import` `no-cycle`. Individual projects may add
+further `no-restricted-imports` rules; those belong in the project's own context
+document, not here.
+
+### Testing layers
+
+Two layers with a hard split. Do not test the same thing in both.
+
+| Layer | Scope |
+|---|---|
+| Vitest + React Testing Library | Logic, Zod schemas, atoms, pure functions, components in isolation |
+| Playwright | Flows through the running application, and anything rendered by WebGL or a canvas — these cannot be meaningfully tested in jsdom |
+
+Unit tests are colocated with the code they test (`src/**/*.test.ts(x)`). E2E
+tests live in `e2e/` at project root and must be excluded from the Vitest config
+and from the application `tsconfig` — E2E framework types must never leak into
+`src/`.
+
+### Test selectors
+
+Target `data-testid` attributes. Never select by CSS class or by Tailwind
+utility — those change for visual reasons and would make refactoring break
+tests.
 
 ## Coding conventions
 
@@ -135,7 +167,7 @@ Folders: `kebab-case`. Files: `camelCase` (non-components) or `PascalCase` (Reac
 flight-card/        ✓  folder
 FlightCard/          ✗  folder
 
-FlightCard.tsx             ✓  component
+FlightCard.tsx         ✓  component
 flightTimes.ts         ✓  non-component file
 flight-times.ts        ✗  non-component file
 ```
@@ -146,9 +178,26 @@ Every file contains exactly one React component. No exceptions.
 
 Export style is unrestricted — `export const`, `export default`, `export function` are all valid.
 
+### Component typing
+
+Never use `React.FC` or `React.FunctionComponent`. Type props directly in the
+function arguments.
+
+```ts
+// ✓
+export const Button = ({ label }: ButtonPropsT) => {}
+
+// ✗
+export const Button: React.FC<ButtonProps> = ({ label }) => {}
+```
+
 ### Styles
 
 Use Tailwind CSS. Do not use Sass, SCSS, or plain CSS (except a single global stylesheet required by the framework).
+
+### Control flow
+
+No single-line `if` statements — always use braces and a new line.
 
 ### Import names
 
@@ -188,18 +237,42 @@ Every file must have a postfix describing its role. Use only postfixes from the 
 | `.type` | `flightCard.type.ts`    |
 | `.enum` | `flightType.enum.ts`    |
 | `.const` | `flightCard.const.ts`   |
+| `.init` | `queryClient.init.ts` (only in `application/`) |
 | `.service` | `analytics.service.ts`  |
 | `.api` | `flights.api.ts` (only in `application/api/`) |
 | `.atom` | `selectedFlight.atom.ts` |
 | `.schema` | `flight.schema.ts`      |
 | `.test` | `FlightCard.test.tsx`, `flight.schema.test.ts` |
 
+`.init` vs `.service`: `.init` runs once at startup and creates something
+(HTTP client, query client, store, i18n, SDK init). `.service` is a module with
+side effects used repeatedly at runtime. If the decision table above puts the
+file in `application/`, it is `.init`.
+
+`.init` vs `.const`: `.const` holds values; `.init` is the code that consumes
+them. A style URL is `.const`; the code creating an instance from it is `.init`.
+
 Test files are colocated with the tested file and keep its name with `.test` appended before the extension.
 
 ### Type and enum postfixes
 
-All types use `T` postfix: `FlightCardT`, `AirlineT` — in `.type` files.
-All enums use `E` postfix: `FlightTypeE`, `FlightStatusE` — in `.enum` files inside `types/` folder.
+**Naming always applies.** Every type ends with `T` (`FlightCardT`, `AirlineT`),
+every enum ends with `E` (`FlightTypeE`, `FlightStatusE`). No exceptions.
+
+**Placement follows the promotion rule.** A type used in one file only — most
+often a props type — stays in that file, declared above the component. It moves
+to a `.type` file once a second place needs it.
+
+```ts
+// ✓ FlightCard.tsx
+type FlightCardPropsT = { flight: FlightT }
+
+export const FlightCard = ({ flight }: FlightCardPropsT) => {}
+```
+
+Enums are the exception: always in a `.enum` file inside a `types/` folder,
+regardless of how many places use them. An enum with a single consumer is
+usually a string union in disguise, and the separate file is a useful barrier.
 
 Enum values must be SCREAMING_SNAKE_CASE:
 
@@ -209,7 +282,6 @@ enum FlightStatusE {
   ON_TIME = 'ON_TIME',
 }
 ```
-
 
 ### Types vs interfaces
 

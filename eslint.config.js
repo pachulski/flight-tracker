@@ -12,9 +12,29 @@ import tseslint from 'typescript-eslint'
 // Naming patterns (.ai/ARCHITECTURE.md → "File name postfixes")
 const CAMEL_CASE = '+([a-z])*([a-z0-9])*([A-Z]*([a-z0-9]))'
 const PASCAL_CASE = '*([A-Z]*([a-z0-9]))'
-const POSTFIX = '@(hook|util|type|enum|const|service|api|atom|schema)'
+const POSTFIX = '@(hook|util|type|enum|const|init|service|api|atom|schema)'
 const POSTFIX_FILE = `${CAMEL_CASE}.${POSTFIX}?(.test)`
 const COMPONENT_FILE = `${PASCAL_CASE}?(.test)`
+
+const PLAYWRIGHT_RESTRICTION = {
+  name: '@playwright/test',
+  message: 'Playwright belongs to e2e/ only.',
+}
+
+// Renderer boundary (.ai/PROJECT-CONTEXT.md → "The renderer boundary"):
+// a prohibition by layer, not a list of permitted folders
+const MAPLIBRE_RESTRICTION = {
+  group: ['maplibre-gl', 'maplibre-gl/*'],
+  message:
+    'maplibre-gl must not be imported in application/api/, shared/, or any utils/, schemas/ or types/ folder — these layers deal in domain objects and GeoJSON.',
+}
+const MAPLIBRE_FORBIDDEN_FILES = [
+  'src/application/api/**/*.{ts,tsx}',
+  'src/shared/**/*.{ts,tsx}',
+  'src/**/utils/**/*.{ts,tsx}',
+  'src/**/schemas/**/*.{ts,tsx}',
+  'src/**/types/**/*.{ts,tsx}',
+]
 
 // features/A must not import from features/B
 const featureZones = readdirSync('src/features', { withFileTypes: true })
@@ -105,17 +125,7 @@ export default defineConfig([
     languageOptions: { globals: globals.browser },
     plugins: { 'check-file': checkFile },
     rules: {
-      'no-restricted-imports': [
-        'error',
-        {
-          paths: [
-            {
-              name: '@playwright/test',
-              message: 'Playwright belongs to e2e/ only.',
-            },
-          ],
-        },
-      ],
+      'no-restricted-imports': ['error', { paths: [PLAYWRIGHT_RESTRICTION] }],
       'import-x/no-restricted-paths': [
         'error',
         {
@@ -142,8 +152,34 @@ export default defineConfig([
         },
         {
           errorMessage:
-            'File "{{ target }}" must be a PascalCase component or camelCase with an allowed postfix (.hook, .util, .type, .enum, .const, .service, .api, .atom, .schema), optionally followed by .test',
+            'File "{{ target }}" must be a PascalCase component or camelCase with an allowed postfix (.hook, .util, .type, .enum, .const, .init, .service, .api, .atom, .schema), optionally followed by .test',
         },
+      ],
+      // Location-restricted postfixes: .init only in application/, .api only in application/api/
+      'check-file/filename-blocklist': [
+        'error',
+        {
+          'src/*.init.*': 'application/',
+          'src/!(application)/**/*.init.*': 'application/',
+          'src/*.api.*': 'application/api/',
+          'src/!(application)/**/*.api.*': 'application/api/',
+          'src/application/*.api.*': 'application/api/',
+          'src/application/!(api)/**/*.api.*': 'application/api/',
+        },
+        {
+          errorMessage:
+            'File "{{ target }}" is in the wrong layer: .init belongs only in application/, .api only in application/api/',
+        },
+      ],
+    },
+  },
+  {
+    // Rule options are replaced, not merged, so the Playwright restriction is repeated
+    files: MAPLIBRE_FORBIDDEN_FILES,
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        { paths: [PLAYWRIGHT_RESTRICTION], patterns: [MAPLIBRE_RESTRICTION] },
       ],
     },
   },

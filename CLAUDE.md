@@ -1,2 +1,3 @@
 @.ai/AGENTS.md
 @.ai/ARCHITECTURE.md
+@.ai/PROJECT-CONTEXT.md
