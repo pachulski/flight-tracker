@@ -20,7 +20,7 @@ Init and integration only. Use this layer when code runs once at startup OR call
 
 ```
 application/   → HTTP client, routing config, store setup, i18n config, analytics SDK init, server endpoint logic
-services/      → Redux slices, event-sending modules (analytics), notification handlers
+services/      → event-sending modules (analytics), notification handlers
 ```
 
 Decision table:
@@ -58,11 +58,13 @@ Generic, technical code. No business logic, no domain knowledge.
 
 ```
 src/shared/
+├─ atoms/        # Global Jotai atoms (no business logic)
 ├─ components/   # UI components (no business logic)
 ├─ consts/       # Global constants
 ├─ hooks/        # Generic hooks
-├─ services/     # Runtime modules: Redux slices, analytics event senders, notifications
-├─ store/        # State setup
+├─ schemas/      # Generic Zod schemas
+├─ services/     # Runtime modules: analytics event senders, notifications
+├─ store/        # Jotai store setup (`createStore` + `Provider`) — only when a custom store is needed
 ├─ types/        # Global types and enums
 └─ utils/        # Pure functions (no side effects)
 ```
@@ -76,6 +78,7 @@ Each domain area has its own folder. Business logic, views, and dedicated compon
 ```
 src/features/
 └─ airline/
+   ├─ atoms/
    ├─ components/
    │  └─ flight-card/
    │     ├─ FlightCard.tsx
@@ -84,6 +87,7 @@ src/features/
    ├─ hooks/
    ├─ utils/
    ├─ consts/
+   ├─ schemas/
    ├─ services/
    └─ views/
       └─ flights/
@@ -185,7 +189,11 @@ Every file must have a postfix describing its role. Use only postfixes from the 
 | `.enum` | `flightType.enum.ts`    |
 | `.const` | `flightCard.const.ts`   |
 | `.service` | `analytics.service.ts`  |
-| `.slice` | `flight.slice.ts`       |
+| `.atom` | `selectedFlight.atom.ts` |
+| `.schema` | `flight.schema.ts`      |
+| `.test` | `FlightCard.test.tsx`, `flight.schema.test.ts` |
+
+Test files are colocated with the tested file and keep its name with `.test` appended before the extension.
 
 ### Type and enum postfixes
 

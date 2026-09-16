@@ -1,38 +1,48 @@
-# See https://help.github.com/ignore-files/ for more about ignoring files.
-
-# dependencies
-/node_modules
-.idea
-.vscode
-.history
-
-# testing
-/coverage
-
-# production
-build
-
-# misc
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
-
+# Logs
+logs
+*.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
 
-keys.js
-environments/*
-/environments/
+# Dependencies
+node_modules
+
+# Build output
+dist
+dist-ssr
+
+# Env files (.env.example is committed)
+.env
+.env.*
+!.env.example
+*.local
+
+# Testing
+/coverage
 
 # Playwright
-node_modules/
 /test-results/
 /playwright-report/
 /blob-report/
 /playwright/.cache/
 /playwright/.auth/
-/playwright/environments/*
 
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.history
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
 
+# Misc
+keys.js
+environments/*
+/environments/

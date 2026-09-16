@@ -11,8 +11,8 @@
 ## Pre-Generation Checklist
 
 Before generating code, verify:
-1. [ ] Folders: `kebab-case`, plural (`hooks/`, `utils/`, `services/`, `types/`, `consts/`, `slices/`, `adapters/` — exceptions: `api/`, `store/`)
-2. [ ] Files: `camelCase` + postfix from allowed list (`.hook`, `.util`, `.type`, `.enum`, `.const`, `.service`, `.slice`) — components: `PascalCase.tsx`, no postfix
+1. [ ] Folders: `kebab-case`, plural (`hooks/`, `utils/`, `services/`, `types/`, `consts/`, `atoms/`, `schemas/`, `adapters/` — exceptions: `api/`, `store/`)
+2. [ ] Files: `camelCase` + postfix from allowed list (`.hook`, `.util`, `.type`, `.enum`, `.const`, `.service`, `.atom`, `.schema`, `.test`) — components: `PascalCase.tsx`, no postfix
 3. [ ] Types end with `T`, Enums end with `E` with `SCREAMING_SNAKE_CASE` values
 4. [ ] Import via full explicit path — no barrel files (`index.ts` re-exports)
 5. [ ] No import alias with `as` — fix the name instead
@@ -24,5 +24,5 @@ Before generating code, verify:
 11. [ ] No cross-feature imports (`features/A` must not import from `features/B`), `shared/` must not import from `features/`
 12. [ ] No `React.FC`, no single-line `if`s
 13. [ ] `type` not `interface` (unless external lib strictly requires it)
-14. [ ] Server logic in `application/server/` only — import only from `pages/api/`
+14. [ ] Server logic in `application/server/` only
 15. [ ] E2E tests in `e2e/` at project root — never inside `src/`
