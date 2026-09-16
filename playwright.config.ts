@@ -35,7 +35,8 @@ export default defineConfig({
 
   /* Run your local dev server before starting the tests */
   webServer: {
-    command: `npm run dev -- --port ${PORT} --strictPort`,
+    // --force: re-optimize deps so a stale Vite cache cannot trigger a reload mid-test
+    command: `npm run dev -- --port ${PORT} --strictPort --force`,
     url: BASE_URL,
     reuseExistingServer: !process.env.CI,
   },

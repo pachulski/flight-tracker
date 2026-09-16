@@ -12,6 +12,8 @@ describe('BurritoListItem', () => {
             price: 24.9,
             spiciness: 2,
           }}
+          isSelected={false}
+          onSelect={vi.fn()}
         />
       </ul>,
     )

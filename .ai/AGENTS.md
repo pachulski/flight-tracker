@@ -12,7 +12,7 @@
 
 Before generating code, verify:
 1. [ ] Folders: `kebab-case`, plural (`hooks/`, `utils/`, `services/`, `types/`, `consts/`, `atoms/`, `schemas/`, `adapters/` — exceptions: `api/`, `store/`)
-2. [ ] Files: `camelCase` + postfix from allowed list (`.hook`, `.util`, `.type`, `.enum`, `.const`, `.service`, `.atom`, `.schema`, `.test`) — components: `PascalCase.tsx`, no postfix
+2. [ ] Files: `camelCase` + postfix from allowed list (`.hook`, `.util`, `.type`, `.enum`, `.const`, `.service`, `.api`, `.atom`, `.schema`, `.test`) — components: `PascalCase.tsx`, no postfix
 3. [ ] Types end with `T`, Enums end with `E` with `SCREAMING_SNAKE_CASE` values
 4. [ ] Import via full explicit path — no barrel files (`index.ts` re-exports)
 5. [ ] No import alias with `as` — fix the name instead

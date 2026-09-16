@@ -35,17 +35,17 @@ Decision table:
 
 Only place for backend API calls. Folder structure mirrors backend URL paths (Backend Reflection).
 
-Rule: `GET /api/airline/flight` → file `src/application/api/airline/fligth.ts`
+Rule: `GET /api/airline/flights` → file `src/application/api/airline/flights.api.ts`
 
 ```
 src/application/api/
 ├─ airline/
-│  └─ flights.ts              # GET /api/airline/flights
+│  └─ flights.api.ts          # GET /api/airline/flights
 ├─ airport/
 │  └─ terminal/
-│     └─ departures.ts   # GET /api/airport/terminal/departures
+│     └─ departures.api.ts   # GET /api/airport/terminal/departures
 └─ open/
-   └─ search.ts              # GET /api/open/search
+   └─ search.api.ts           # GET /api/open/search
 ```
 
 #### application/server/
@@ -178,7 +178,7 @@ import { FlightCard } from './flight-card'
 
 ### File name postfixes
 
-Every file must have a postfix describing its role. Use only postfixes from the list below — do not invent new ones. Files outside `src/` (e.g. `e2e/`, `scripts/`) are not subject to this rule:
+Every file must have a postfix describing its role. Use only postfixes from the list below — do not invent new ones. Files outside `src/` (e.g. `e2e/`, `scripts/`) and framework-required entry files (`src/main.tsx`, `src/vite-env.d.ts`) are not subject to this rule:
 
 | Postfix | Example                 |
 |---|-------------------------|
@@ -189,6 +189,7 @@ Every file must have a postfix describing its role. Use only postfixes from the 
 | `.enum` | `flightType.enum.ts`    |
 | `.const` | `flightCard.const.ts`   |
 | `.service` | `analytics.service.ts`  |
+| `.api` | `flights.api.ts` (only in `application/api/`) |
 | `.atom` | `selectedFlight.atom.ts` |
 | `.schema` | `flight.schema.ts`      |
 | `.test` | `FlightCard.test.tsx`, `flight.schema.test.ts` |

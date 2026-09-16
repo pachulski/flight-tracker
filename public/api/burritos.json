@@ -1,0 +1,5 @@
+[
+  { "id": "carnitas", "name": "Carnitas", "price": 24.9, "spiciness": 2 },
+  { "id": "al-pastor", "name": "Al Pastor", "price": 26.5, "spiciness": 3 },
+  { "id": "veggie", "name": "Veggie", "price": 21, "spiciness": 1 }
+]

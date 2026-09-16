@@ -12,7 +12,7 @@ import tseslint from 'typescript-eslint'
 // Naming patterns (.ai/ARCHITECTURE.md → "File name postfixes")
 const CAMEL_CASE = '+([a-z])*([a-z0-9])*([A-Z]*([a-z0-9]))'
 const PASCAL_CASE = '*([A-Z]*([a-z0-9]))'
-const POSTFIX = '@(hook|util|type|enum|const|service|atom|schema)'
+const POSTFIX = '@(hook|util|type|enum|const|service|api|atom|schema)'
 const POSTFIX_FILE = `${CAMEL_CASE}.${POSTFIX}?(.test)`
 const COMPONENT_FILE = `${PASCAL_CASE}?(.test)`
 
@@ -142,9 +142,17 @@ export default defineConfig([
         },
         {
           errorMessage:
-            'File "{{ target }}" must be a PascalCase component or camelCase with an allowed postfix (.hook, .util, .type, .enum, .const, .service, .atom, .schema), optionally followed by .test',
+            'File "{{ target }}" must be a PascalCase component or camelCase with an allowed postfix (.hook, .util, .type, .enum, .const, .service, .api, .atom, .schema), optionally followed by .test',
         },
       ],
+    },
+  },
+  {
+    // Vite env typing relies on interface declaration merging: https://vite.dev/guide/env-and-mode
+    files: ['src/vite-env.d.ts'],
+    rules: {
+      '@typescript-eslint/consistent-type-definitions': 'off',
+      'check-file/filename-naming-convention': 'off',
     },
   },
   eslintConfigPrettier,
